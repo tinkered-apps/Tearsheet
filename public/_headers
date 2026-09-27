@@ -1,0 +1,21 @@
+# Security baseline. The two OpenStreetMap origins are the only exceptions;
+# AGENTS.md says why.
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://tile.openstreetmap.org; font-src 'self'; connect-src 'self' https://nominatim.openstreetmap.org; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: no-referrer
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
+  Cross-Origin-Opener-Policy: same-origin
+  Strict-Transport-Security: max-age=31536000
+
+/sw.js
+  Cache-Control: no-cache
+
+# Keep the privacy notice and licence texts out of search results.
+# Do not block these paths in robots.txt: crawlers must fetch them to see noindex.
+/privacy
+  X-Robots-Tag: noindex
+/privacy.html
+  X-Robots-Tag: noindex
+/vendor/*
+  X-Robots-Tag: noindex

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#15213b">
+  <meta name="color-scheme" content="light dark">
+  <script src="theme-init.js"></script>
+  <title>Data and privacy · Tearsheet</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="vendor/fonts/fonts.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="app-header">
+    <a class="brand" href="index.html">
+      <svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <rect x="5.1" y="3.6" width="21.8" height="24.8" rx="3.2" fill="#fff"/>
+        <path d="M5.1 18.9h21.8v6.3a3.2 3.2 0 0 1-3.2 3.2H8.3a3.2 3.2 0 0 1-3.2-3.2z" fill="var(--accent)"/>
+        <path d="M10.55 19.6v8.4M16 19.6v8.4M21.45 19.6v8.4" stroke="#fff" stroke-width="1.7"/>
+        <path d="M9.8 9.1h12.4M9.8 13.5h8" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
+        <rect x="5.1" y="3.6" width="21.8" height="24.8" rx="3.2" stroke="currentColor" stroke-width="1.9"/>
+      </svg>
+      <span class="brand-name">Tearsheet</span>
+      <span class="brand-descriptor" data-descriptor>A4 property leaflets</span>
+    </a>
+    <div class="header-controls">
+      <div class="language-switch" role="group" aria-label="Language">
+        <button class="language-button is-active" type="button" data-language="en" aria-pressed="true">EN</button>
+        <button class="language-button" type="button" data-language="pl" aria-pressed="false">PL</button>
+      </div>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Theme"></button>
+    </div>
+  </header>
+
+  <main class="privacy" id="main">
+    <article data-locale="en" lang="en">
+      <h1>Data and privacy</h1>
+      <p class="privacy__lead">Tearsheet runs in your browser. Listing text, your phone number and the QR link are saved in this tab's session storage so they return after a refresh. The app clears them when you open the page anew. The photo stays in memory and is lost on refresh. None of these details are sent to me or anyone else, and the QR code is generated on your device. There are no accounts, analytics, ads or third-party scripts. OpenStreetMap draws the map and answers place searches.</p>
+
+      <section>
+        <h2>Who is responsible</h2>
+        <p>Kuba, <a href="mailto:kuba@tinkered.app">kuba@tinkered.app</a>. Tearsheet is a private, non-commercial hobby project.</p>
+      </section>
+      <section>
+        <h2>What the host records</h2>
+        <p>The site is hosted by Cloudflare. Like any web host, Cloudflare processes your IP address, the time of the request, the page requested and your browser details to deliver the site and protect it from attacks. If a connection to the site fails, your browser may also send Cloudflare a short error report.</p>
+        <p>I can see a sample of these requests, including IP addresses, in the Cloudflare dashboard. I use it only to keep the site working and secure (legitimate interest, Art. 6(1)(f) GDPR). Cloudflare keeps these records for up to 7 days (security events: 24 hours) and then deletes them.</p>
+        <p>Cloudflare, Inc. is based in the United States and processes this data on my behalf under its data processing addendum. Transfers rely on the EU–US Data Privacy Framework, with standard contractual clauses as a fallback. <a href="https://www.cloudflare.com/privacypolicy/" rel="noopener">Cloudflare's privacy policy</a>.</p>
+      </section>
+      <section>
+        <h2>If you email me</h2>
+        <p>Mail to kuba@tinkered.app is forwarded by Cloudflare Email Routing to my Gmail inbox (Google). I use your address and message only to reply (legitimate interest, Art. 6(1)(f) GDPR) and keep the conversation while it may still be useful for follow-up. Ask me to delete it at any time and I will. Google LLC, like Cloudflare, is certified under the EU–US Data Privacy Framework.</p>
+      </section>
+      <section>
+        <h2>Map and place search (OpenStreetMap)</h2>
+        <p>The map is drawn from OpenStreetMap's tile server. To load it, your browser sends the OpenStreetMap Foundation your IP address, the map area you are looking at and this site's address (not the page path).</p>
+        <p>Place search uses OpenStreetMap's Nominatim service and runs only when you press Search. It receives your IP address and the text you typed. If you don't want to share an address, skip the search and click the spot on the map instead.</p>
+        <p>I rely on legitimate interest (Art. 6(1)(f) GDPR) to show you the map and the place you ask for. The OpenStreetMap Foundation handles this data as a separate controller under its own <a href="https://osmfoundation.org/wiki/Privacy_Policy" rel="noopener">privacy policy</a>; I receive none of it. The Foundation is based in the United Kingdom, which the European Commission recognises as providing adequate protection.</p>
+      </section>
+      <section>
+        <h2>Your rights</h2>
+        <p>You can ask for access to your data, its correction or deletion, restriction of processing, or object to processing, by writing to kuba@tinkered.app. You can also complain to your data protection authority; in Poland that is the President of the Personal Data Protection Office (UODO).</p>
+        <p>The hosting records are not tied to names and expire within 7 days. To check whether any of them concern you, send your IP address and the time of your visit within that period.</p>
+      </section>
+      <section>
+        <h2>What the app stores in your browser</h2>
+        <p>The app stores these items in your browser. They stay on your device and are not sent to me. The photo is never stored.</p>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Item</th><th>Type</th><th>Purpose</th><th>Kept until</th></tr></thead>
+          <tbody>
+            <tr><td data-label="Item"><code>tearsheet.theme</code></td><td data-label="Type">localStorage</td><td data-label="Purpose">remembers the theme you picked; written only after you use the theme button</td><td data-label="Kept until">you clear site data</td></tr>
+            <tr><td data-label="Item"><code>tearsheet.language</code></td><td data-label="Type">localStorage</td><td data-label="Purpose">remembers the language you picked; written only after you use the EN or PL button</td><td data-label="Kept until">you clear site data</td></tr>
+            <tr><td data-label="Item"><code>tearsheet.units</code></td><td data-label="Type">localStorage</td><td data-label="Purpose">remembers your metric or imperial choice; written only after you use the units switch</td><td data-label="Kept until">you clear site data</td></tr>
+            <tr><td data-label="Item"><code>tearsheet.form</code></td><td data-label="Type">sessionStorage</td><td data-label="Purpose">keeps the text fields and selected area unit through a refresh of this tab</td><td data-label="Kept until">you open the page anew or clear site data</td></tr>
+            <tr><td data-label="Item"><code>tearsheet-v</code> + app version</td><td data-label="Type">Cache Storage</td><td data-label="Purpose">the app's own files, so it opens offline; no form data, photos or map tiles</td><td data-label="Kept until">the next app version, or until you clear site data</td></tr>
+            <tr><td data-label="Item">Network error reporting policy (Cloudflare)</td><td data-label="Type">browser network setting</td><td data-label="Purpose">tells the browser where to send a report if a connection to the site fails</td><td data-label="Kept until">7 days</td></tr>
+          </tbody>
+        </table></div>
+        <p>Remove them at any time in your browser's site settings.</p>
+        <p>No analytics, advertising or profiling.</p>
+      </section>
+      <section>
+        <h2>Licences</h2>
+        <p>Tearsheet uses Leaflet (<a href="vendor/LICENSE-leaflet.txt">BSD-2-Clause</a>), QR Code Generator by Kazuhiko Arase (<a href="vendor/LICENSE-qrcode.txt">MIT</a>), html2canvas (<a href="vendor/LICENSE-html2canvas.txt">MIT</a>), pdf-lib (<a href="vendor/LICENSE-pdf-lib.txt">MIT</a>), the Inter and Sora fonts (SIL Open Font License 1.1: <a href="vendor/fonts/OFL-Inter.txt">Inter</a>, <a href="vendor/fonts/OFL-Sora.txt">Sora</a>), and map data © <a href="https://www.openstreetmap.org/copyright" rel="noopener">OpenStreetMap contributors</a>.</p>
+      </section>
+      <p class="privacy__updated">Last updated: 27 September 2026</p>
+    </article>
+
+    <article data-locale="pl" lang="pl" hidden>
+      <h1>Dane i prywatność</h1>
+      <p class="privacy__lead">Tearsheet działa w przeglądarce. Treść ogłoszenia, numer telefonu i link QR są zapisywane w pamięci sesji tej karty, żeby wróciły po odświeżeniu. Przy nowym otwarciu strony aplikacja je czyści. Zdjęcie pozostaje w pamięci i znika po odświeżeniu. Te dane nie trafiają do mnie ani do nikogo innego, a kod QR powstaje na Twoim urządzeniu. Nie ma kont, analityki, reklam ani skryptów zewnętrznych. OpenStreetMap rysuje mapę i odpowiada na wyszukiwania miejsc.</p>
+
+      <section>
+        <h2>Kto odpowiada za dane</h2>
+        <p>Kuba, <a href="mailto:kuba@tinkered.app">kuba@tinkered.app</a>. Tearsheet to prywatny, niekomercyjny projekt hobbystyczny.</p>
+      </section>
+      <section>
+        <h2>Co zapisuje hosting</h2>
+        <p>Stronę hostuje Cloudflare. Jak każdy hosting, Cloudflare przetwarza adres IP, czas żądania, adres strony i dane przeglądarki, żeby dostarczyć stronę i chronić ją przed atakami. Gdy połączenie ze stroną się nie powiedzie, przeglądarka może też wysłać do Cloudflare krótki raport o błędzie.</p>
+        <p>Próbkę tych żądań, z adresami IP, widzę w panelu Cloudflare. Korzystam z niej wyłącznie w celu utrzymania działania i bezpieczeństwa strony (prawnie uzasadniony interes, art. 6 ust. 1 lit. f RODO). Cloudflare przechowuje te zapisy do 7 dni (zdarzenia bezpieczeństwa: 24 godziny), po czym je usuwa.</p>
+        <p>Cloudflare, Inc. ma siedzibę w USA i przetwarza te dane w moim imieniu na podstawie umowy powierzenia. Transfer opiera się na ramach ochrony danych UE–USA (Data Privacy Framework), a pomocniczo na standardowych klauzulach umownych. <a href="https://www.cloudflare.com/privacypolicy/" rel="noopener">Polityka prywatności Cloudflare</a>.</p>
+      </section>
+      <section>
+        <h2>Jeśli do mnie napiszesz</h2>
+        <p>Poczta na kuba@tinkered.app jest przekazywana przez Cloudflare Email Routing do mojej skrzynki Gmail (Google). Twój adres i treść wiadomości wykorzystuję wyłącznie do odpowiedzi (prawnie uzasadniony interes, art. 6 ust. 1 lit. f RODO) i przechowuję korespondencję, dopóki może być potrzebna do dalszego kontaktu. Na Twoją prośbę usunę ją w każdej chwili. Google LLC, tak jak Cloudflare, ma certyfikację w ramach ochrony danych UE–USA (Data Privacy Framework).</p>
+      </section>
+      <section>
+        <h2>Mapa i wyszukiwanie miejsc (OpenStreetMap)</h2>
+        <p>Mapa pochodzi z serwera kafelków OpenStreetMap. Żeby ją wczytać, przeglądarka wysyła do OpenStreetMap Foundation Twój adres IP, oglądany fragment mapy i adres tej strony (bez ścieżki).</p>
+        <p>Wyszukiwanie miejsc korzysta z usługi Nominatim i działa tylko po kliknięciu Szukaj. Otrzymuje Twój adres IP i wpisany tekst. Jeśli nie chcesz podawać adresu, pomiń wyszukiwanie i kliknij punkt na mapie.</p>
+        <p>Podstawą jest mój prawnie uzasadniony interes w pokazaniu mapy i szukanego miejsca (art. 6 ust. 1 lit. f RODO). OpenStreetMap Foundation przetwarza te dane jako odrębny administrator, zgodnie z własną <a href="https://osmfoundation.org/wiki/Privacy_Policy" rel="noopener">polityką prywatności</a>; ja ich nie otrzymuję. Fundacja ma siedzibę w Wielkiej Brytanii, wobec której Komisja Europejska stwierdziła odpowiedni stopień ochrony.</p>
+      </section>
+      <section>
+        <h2>Twoje prawa</h2>
+        <p>Możesz zażądać dostępu do danych, ich sprostowania lub usunięcia, ograniczenia przetwarzania albo wnieść sprzeciw, pisząc na kuba@tinkered.app. Przysługuje Ci też skarga do Prezesa Urzędu Ochrony Danych Osobowych.</p>
+        <p>Zapisy hostingu nie są przypisane do osób i wygasają w ciągu 7 dni. Żeby sprawdzić, czy któryś Cię dotyczy, podaj adres IP i czas wizyty z tego okresu.</p>
+      </section>
+      <section>
+        <h2>Co aplikacja zapisuje w przeglądarce</h2>
+        <p>Aplikacja zapisuje w przeglądarce poniższe elementy. Zostają na Twoim urządzeniu i nie trafiają do mnie. Zdjęcie nigdy nie jest zapisywane.</p>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Element</th><th>Rodzaj</th><th>Cel</th><th>Przechowywany do</th></tr></thead>
+          <tbody>
+            <tr><td data-label="Element"><code>tearsheet.theme</code></td><td data-label="Rodzaj">localStorage</td><td data-label="Cel">zapamiętuje wybrany motyw; zapisywany dopiero po użyciu przycisku motywu</td><td data-label="Przechowywany do">wyczyszczenia danych witryny</td></tr>
+            <tr><td data-label="Element"><code>tearsheet.language</code></td><td data-label="Rodzaj">localStorage</td><td data-label="Cel">zapamiętuje wybrany język; zapisywany dopiero po użyciu przycisku EN lub PL</td><td data-label="Przechowywany do">wyczyszczenia danych witryny</td></tr>
+            <tr><td data-label="Element"><code>tearsheet.units</code></td><td data-label="Rodzaj">localStorage</td><td data-label="Cel">zapamiętuje wybór jednostek metrycznych lub imperialnych; zapisywany dopiero po użyciu przełącznika</td><td data-label="Przechowywany do">wyczyszczenia danych witryny</td></tr>
+            <tr><td data-label="Element"><code>tearsheet.form</code></td><td data-label="Rodzaj">sessionStorage</td><td data-label="Cel">zachowuje pola tekstowe i jednostkę powierzchni po odświeżeniu tej karty</td><td data-label="Przechowywany do">nowego otwarcia strony lub wyczyszczenia danych witryny</td></tr>
+            <tr><td data-label="Element"><code>tearsheet-v</code> + wersja aplikacji</td><td data-label="Rodzaj">Cache Storage</td><td data-label="Cel">pliki aplikacji, żeby działała offline; bez danych z formularza, zdjęć i fragmentów mapy</td><td data-label="Przechowywany do">kolejnej wersji aplikacji lub wyczyszczenia danych witryny</td></tr>
+            <tr><td data-label="Element">Polityka raportowania błędów sieci (Cloudflare)</td><td data-label="Rodzaj">ustawienie sieciowe przeglądarki</td><td data-label="Cel">wskazuje przeglądarce, dokąd wysłać raport, gdy połączenie ze stroną się nie powiedzie</td><td data-label="Przechowywany do">7 dni</td></tr>
+          </tbody>
+        </table></div>
+        <p>Usuniesz je w każdej chwili w ustawieniach witryny w przeglądarce.</p>
+        <p>Bez analityki, reklam i profilowania.</p>
+      </section>
+      <section>
+        <h2>Licencje</h2>
+        <p>Tearsheet korzysta z Leaflet (<a href="vendor/LICENSE-leaflet.txt">BSD-2-Clause</a>), QR Code Generator autorstwa Kazuhiko Arase (<a href="vendor/LICENSE-qrcode.txt">MIT</a>), html2canvas (<a href="vendor/LICENSE-html2canvas.txt">MIT</a>), pdf-lib (<a href="vendor/LICENSE-pdf-lib.txt">MIT</a>), fontów Inter i Sora (SIL Open Font License 1.1: <a href="vendor/fonts/OFL-Inter.txt">Inter</a>, <a href="vendor/fonts/OFL-Sora.txt">Sora</a>) oraz danych mapowych © <a href="https://www.openstreetmap.org/copyright" rel="noopener">autorzy OpenStreetMap</a>.</p>
+      </section>
+      <p class="privacy__updated">Ostatnia aktualizacja: 27 września 2026 r.</p>
+    </article>
+  </main>
+
+  <script src="privacy.js"></script>
+</body>
+</html>

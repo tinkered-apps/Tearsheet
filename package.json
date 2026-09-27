@@ -1,0 +1,19 @@
+{
+  "name": "tearsheet",
+  "private": true,
+  "type": "module",
+  "author": {
+    "name": "Kuba",
+    "email": "kuba@tinkered.app"
+  },
+  "scripts": {
+    "start": "wrangler dev --ip 127.0.0.1 --port 8765",
+    "test": "node scripts/check.mjs",
+    "test:e2e": "playwright test",
+    "deploy": "npm test && wrangler deploy"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0",
+    "wrangler": "4.138.0"
+  }
+}

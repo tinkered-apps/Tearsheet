@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Tearsheet">
+  <rect width="32" height="32" rx="7" fill="#15213b"/>
+  <rect x="7.4" y="5.4" width="17.2" height="21.2" rx="2.6" fill="#ffffff"/>
+  <path d="M7.4 18.4h17.2v5.6a2.6 2.6 0 0 1-2.6 2.6H10a2.6 2.6 0 0 1-2.6-2.6z" fill="#ff5a3c"/>
+  <path d="M11.7 19v7.6M16 19v7.6M20.3 19v7.6" stroke="#15213b" stroke-width="1.5"/>
+  <path d="M11 9.9h10M11 13.4h6.4" stroke="#15213b" stroke-width="2" stroke-linecap="round"/>
+</svg>

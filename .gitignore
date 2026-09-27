@@ -1,0 +1,30 @@
+# Dependencies and test output
+node_modules/
+test-results/
+playwright-report/
+
+# Operating-system and editor files
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+
+# Local development artifacts
+.idea/
+.vscode/
+*.log
+.wrangler/
+
+# Secrets and local environment
+.env
+.env.*
+!.env.example
+.dev.vars*
+
+# Claude Code worktrees and personal settings
+.claude/worktrees/
+.claude/settings.local.json
+
+# Legal audit working files (drafts with placeholders)
+.audyt-prawny/
