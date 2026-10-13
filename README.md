@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="public/icons/social-card.png" alt="The Tearsheet name next to a property leaflet with a row of tear-off phone tabs along its bottom edge." width="760">
+</p>
+
 # Tearsheet
 
 Tearsheet builds a real-estate leaflet on one landscape A4 sheet: a photo, a
@@ -9,6 +13,20 @@ On Firefox for Android, the app downloads a landscape A4 PDF directly because
 its system print dialog scales the leaflet down. Other browsers use printing.
 
 Live at <https://tearsheet.tinkered.app>
+
+## Making a leaflet
+
+1. Fill in the listing: title, location, area, purpose, utilities, a description
+   and a phone number. The area converts between m², ares, hectares, ft² and
+   acres when you change the unit.
+2. Add a photograph (JPG, PNG or WebP, up to 15 MB), then drag and zoom it to
+   frame the crop.
+3. Search for the place, then click the map or drag the marker.
+4. Optional: a badge, one or two words above the number on each tab, and a link
+   that becomes a QR code, generated in the browser.
+5. **Review and print**. The preview is the printed sheet, and the app lists
+   what is still missing or does not fit before it lets you print. In the print
+   dialog choose A4, landscape, no margins, with background graphics on.
 
 ## Data
 
