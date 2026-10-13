@@ -67,7 +67,9 @@ test("Firefox Android downloads a compact A4 PDF", async ({ page }, testInfo) =>
     page.locator("#print-button").click()
   ]);
   expect(download.suggestedFilename()).toBe("Tearsheet.pdf");
-  const pdf = await readFile(await download.path());
+  // A virus scanner can hold a fresh download for a moment, so the read is retried.
+  let pdf;
+  await expect(async () => { pdf = await readFile(await download.path()); }).toPass({ timeout: 10_000 });
   expect(pdf.subarray(0, 5).toString()).toBe("%PDF-");
   expect(pdf.length).toBeLessThan(5_000_000);
   await download.saveAs(testInfo.outputPath("firefox-android.pdf"));

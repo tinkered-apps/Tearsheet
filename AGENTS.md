@@ -25,6 +25,10 @@ Workers Builds settings, once the repository is connected: production branch
 `main`, empty build command, deploy command `npm run deploy`, and `npm test` as
 the deploy command for other branches.
 
+`allowScripts` in `package.json` pins the `esbuild` and `workerd` versions whose
+install scripts npm may run. Update it when a Wrangler upgrade changes those
+versions.
+
 There is no build step. Third-party libraries and fonts are vendored in
 `public/vendor/` with their licence texts; add new ones the same way.
 
