@@ -1,7 +1,7 @@
 "use strict";
 
 // Shown in the footer. Keep in step with CACHE in sw.js; npm test checks it.
-const APP_VERSION = "1.00";
+const APP_VERSION = "1.01";
 
 const MAP_PROVIDER = {
   tiles: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -461,6 +461,7 @@ function setMarker(latlng, panPicker = false) {
   if (!previewMarker) {
     previewMarker = L.marker(point, {
       interactive: false,
+      keyboard: false, // no tab stop or button role: the preview map is a picture
       icon: markerIcon()
     }).addTo(previewMap);
   } else {

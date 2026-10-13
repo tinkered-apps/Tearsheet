@@ -2,10 +2,9 @@
 
 // Caches the app shell only. Form data, photos and map tiles are never stored.
 // The name carries APP_VERSION from app.js; npm test checks they match.
-const CACHE = "tearsheet-v1.00";
+const CACHE = "tearsheet-v1.01";
 const SHELL = [
   "./",
-  "index.html",
   "privacy",
   "privacy.js",
   "styles.css",
@@ -55,8 +54,8 @@ self.addEventListener("fetch", (event) => {
       .catch(async () => {
         const hit = await caches.match(request, { ignoreSearch: true });
         if (hit || request.mode !== "navigate") return hit;
-        // The host redirects /privacy.html to /privacy, and only the final URL is cached.
-        const path = new URL(request.url).pathname.replace(/\.html$/, "");
+        // The host redirects /index.html to / and /privacy.html to /privacy, and only the final URL is cached.
+        const path = new URL(request.url).pathname.replace(/(^|\/)index\.html$/, "$1").replace(/\.html$/, "");
         return caches.match(path, { ignoreSearch: true });
       })
   );

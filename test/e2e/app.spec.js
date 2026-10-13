@@ -1,5 +1,11 @@
 import { test as base, expect } from "@playwright/test";
+import { AxeBuilder } from "@axe-core/playwright";
+import { readFileSync } from "node:fs";
 import { readFile } from "node:fs/promises";
+
+// Read from the source so a version bump does not need a matching edit here.
+const source = (file) => readFileSync(new URL(`../../public/${file}`, import.meta.url), "utf8");
+const APP_VERSION = source("app.js").match(/^const APP_VERSION = "([^"]+)";$/m)[1];
 
 // Every test fails on a console error or uncaught exception (CSP violations
 // included) and warns about requests that leave the app's own origin.
@@ -228,7 +234,7 @@ test.describe("language choice", () => {
 test("the footer credit shows the app version", async ({ page }) => {
   await page.goto("/");
   const footer = page.locator(".app-footer");
-  await expect(footer.locator("p")).toHaveText("Tearsheet v1.00 by Kuba · tinkered.app · Privacy");
+  await expect(footer.locator("p")).toHaveText(`Tearsheet v${APP_VERSION} by Kuba · tinkered.app · Privacy`);
   await expect(footer.getByRole("link", { name: "Kuba" })).toHaveAttribute("href", "mailto:kuba@tinkered.app");
   await expect(footer.getByRole("link", { name: "tinkered.app" })).toHaveAttribute("href", "https://tinkered.app");
   await expect(footer.getByRole("link", { name: "Privacy" })).toHaveAttribute("href", "privacy.html#en");
@@ -250,6 +256,52 @@ test("the footer opens the privacy page in the app's language", async ({ page })
   await page.getByRole("link", { name: /Tearsheet/ }).click();
   await expect(page.locator("#leaflet-form")).toBeVisible();
 });
+
+test("the home page carries a link preview with a large image", async ({ page, request }) => {
+  await page.goto("/");
+  const meta = (name) => page.locator(`meta[property="${name}"], meta[name="${name}"]`);
+  await expect(meta("og:title")).toHaveAttribute("content", await page.title());
+  await expect(meta("og:description")).toHaveAttribute("content", /\S/);
+  await expect(meta("og:url")).toHaveAttribute("content", "https://tearsheet.tinkered.app/");
+  await expect(meta("twitter:card")).toHaveAttribute("content", "summary_large_image");
+
+  const image = new URL(await meta("og:image").getAttribute("content"));
+  expect(image.origin).toBe("https://tearsheet.tinkered.app");
+  const response = await request.get(image.pathname);
+  expect(response.headers()["content-type"]).toBe("image/png");
+  // Width and height sit at bytes 16 to 23 of a PNG.
+  const png = await response.body();
+  expect([png.readUInt32BE(16), png.readUInt32BE(20)]).toEqual([1200, 630]);
+});
+
+// The desktop and mobile projects cover both layouts; this covers both themes.
+for (const theme of ["light", "dark"]) {
+  test(`axe finds no accessibility violations in the ${theme} theme`, async ({ page }) => {
+    await page.emulateMedia({ colorScheme: theme, reducedMotion: "reduce" });
+    // Every view is scanned before the assertion, so one run lists all violations.
+    const found = [];
+    const scan = async (view) => {
+      const { violations } = await new AxeBuilder({ page }).analyze();
+      for (const violation of violations)
+        for (const node of violation.nodes) found.push(`${view}: ${violation.id}: ${node.target.join(" ")}`);
+    };
+
+    await page.goto("/");
+    await expect(page.locator("#leaflet-form")).toBeVisible();
+    await scan("empty form");
+    await page.fill("#phone", "123");
+    await page.fill("#area", "0");
+    await page.locator("#title").focus();
+    await scan("form with errors");
+    await fillListing(page);
+    await expect(page.locator("#validation-title")).toHaveText("The leaflet is ready to print", { timeout: 20_000 });
+    await scan("complete listing");
+    await page.goto("/privacy#en");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Data and privacy");
+    await scan("privacy");
+    expect(found).toEqual([]);
+  });
+}
 
 test("the privacy page is sent with a noindex header", async ({ request }) => {
   for (const path of ["/privacy", "/privacy.html"]) {
@@ -308,16 +360,40 @@ test("the mobile print button settles beside the preview heading", async ({ page
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(320);
 });
 
-test("the app and privacy notice open offline", async ({ page, context }) => {
+test("a fresh install opens the app and privacy notice offline, by either URL", async ({ page, context }) => {
   await page.goto("/");
-  await page.evaluate(() => navigator.serviceWorker.ready);
-  await page.reload();
+  // Wait for the worker to control this page and to finish filling the cache, then cut the network.
+  await page.evaluate(async () => {
+    await navigator.serviceWorker.ready;
+    if (!navigator.serviceWorker.controller) {
+      await new Promise((resolve) =>
+        navigator.serviceWorker.addEventListener("controllerchange", resolve, { once: true }));
+    }
+  });
+  const shellSize = source("sw.js").match(/^\s+"[^"]+",?$/gm).length;
+  await expect.poll(
+    () => page.evaluate(async () => {
+      const [name] = await caches.keys();
+      return name ? (await (await caches.open(name)).keys()).length : 0;
+    }),
+    { timeout: 15_000 }
+  ).toBeGreaterThanOrEqual(shellSize);
+
   await context.setOffline(true);
-  await page.reload();
-  await expect(page.locator(".brand-name")).toHaveText("Tearsheet");
-  await page.goto("/privacy.html#en");
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Data and privacy");
-  await context.setOffline(false);
+  try {
+    // The host redirects the .html forms to the clean URLs; offline, the worker has to map them.
+    for (const url of ["/", "/index.html"]) {
+      await page.goto(url);
+      await expect(page.locator(".brand-name"), url).toHaveText("Tearsheet");
+      await expect(page.locator("#leaflet-form"), url).toBeVisible();
+    }
+    for (const url of ["/privacy#en", "/privacy.html#en"]) {
+      await page.goto(url);
+      await expect(page.getByRole("heading", { level: 1 }), url).toHaveText("Data and privacy");
+    }
+  } finally {
+    await context.setOffline(false);
+  }
 });
 
 test("the leaflet prints on exactly one A4 landscape page", async ({ page, browserName }, testInfo) => {

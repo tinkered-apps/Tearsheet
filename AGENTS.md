@@ -5,7 +5,7 @@ restore it, and credits. Commands and conventions live here.
 
 ## Commands
 
-- `npm install`: installs the pinned Wrangler and Playwright. On a new machine,
+- `npm install`: installs the pinned Wrangler, Playwright and axe. On a new machine,
   also run `npx playwright install chromium` once.
 - `npm start`: `wrangler dev` at `http://127.0.0.1:8765/`, serving `public/`
   with the production headers from `public/_headers`.
@@ -14,8 +14,10 @@ restore it, and credits. Commands and conventions live here.
   `APP_VERSION` matches the cache name, and that no page has an inline script.
 - `npm run test:e2e`: Playwright on desktop and mobile Chromium against
   `npm start`. Fails on console errors (CSP violations included) and warns about
-  requests to other origins. Not part of the deploy gate; run it locally before
-  shipping a UI change.
+  requests to other origins. Includes an axe scan of the form, a complete
+  listing and the privacy notice in both themes, and an offline run on a fresh
+  install. Not part of the deploy gate; run it locally before shipping a UI
+  change.
 - `npm run deploy`: `npm test && wrangler deploy` to the `tearsheet` Worker on
   `tearsheet.tinkered.app`. One environment only: no stored data, no migrations.
 
@@ -57,9 +59,12 @@ Repo-only: `scripts/check.mjs`, `test/e2e/`, `playwright.config.js`,
   release and whenever `SHELL` or the caching rules change. The privacy notice
   names the cache by its prefix, so a bump needs no edit there.
 - Every file the app needs at runtime goes into `SHELL` in `public/sw.js`. The
-  shell lists `privacy`, not `privacy.html`, because the host redirects the
-  latter to the former and a redirected response cannot serve a page
-  navigation offline.
+  shell lists `./` and `privacy`, not `index.html` and `privacy.html`, because
+  the host redirects the latter to the former and a redirected response cannot
+  serve a page navigation offline. `npm test` rejects `.html` entries.
+- Link preview: the `og:*` tags in `public/index.html` point to
+  `public/icons/social-card.png` (1200×630), with absolute URLs because
+  crawlers do not run scripts. The image is not in `SHELL`; no page loads it.
 - Every user-facing string ships in English and Polish; see the translation
   tables in `public/app.js`. A feature isn't done if it only has one language.
   User-facing text has no em dashes. The `—` in the preview is the marker for an

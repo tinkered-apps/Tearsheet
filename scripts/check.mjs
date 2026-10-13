@@ -42,6 +42,9 @@ for (const [, key] of html.matchAll(/data-i18n(?:-placeholder|-aria|-alt)?="([^"
 // Every service-worker shell entry and manifest icon must exist.
 const shell = [...read("sw.js").matchAll(/^\s+"([^"]+)",?$/gm)].map((m) => m[1]).filter((p) => p !== "./");
 const icons = JSON.parse(read("manifest.webmanifest")).icons.map((icon) => icon.src);
+for (const file of shell.filter((entry) => entry.endsWith(".html"))) {
+  fail(`sw.js SHELL lists ${file}: use the URL without .html ("./" for index.html)`);
+}
 for (const file of new Set([...shell, ...icons])) {
   // The host serves privacy.html at /privacy, and the shell lists the served URL.
   if (!existsSync(file) && !existsSync(`${file}.html`)) fail(`missing file: ${file}`);
