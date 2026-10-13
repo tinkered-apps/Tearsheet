@@ -42,7 +42,7 @@ Only `public/` is served:
 - `styles.css`: app styling, leaflet layout, and print rules.
 - `theme-init.js`: applies the saved theme before first paint.
 - `privacy.html`, `privacy.js`: the privacy notice and licence credits, in English
-  and Polish. Built from `C:\GIT Repos\.tinkered-legal\privacy-template.html`; keep the
+  and Polish. Built from the shared tinkered.app template (`../.tinkered-legal/privacy-template.html`, outside this repository); keep the
   shared sections as they are there and edit only the Tearsheet parts (lead,
   OpenStreetMap, browser storage table, licences). The language comes from the
   link's hash (`#en`, `#pl`), else the saved choice, else English.
