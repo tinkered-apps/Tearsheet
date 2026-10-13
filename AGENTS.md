@@ -10,9 +10,10 @@ restore it, and credits. Commands and conventions live here.
 - `npm start`: `wrangler dev` at `http://127.0.0.1:8765/`, serving `public/`
   with the production headers from `public/_headers`.
 - `npm test`: ESLint with the recommended rules (`eslint.config.mjs`), then
-  `scripts/check.mjs`. The script checks syntax, that EN and PL have the same
-  translation keys, that every file in `SHELL` and the manifest exists, that
-  `APP_VERSION` matches the cache name, and that no page has an inline script.
+  `scripts/check.mjs`, then the unit tests in `test/*.test.mjs` (Node's test
+  runner). The script checks syntax, that EN and PL have the same translation
+  keys, that every file in `SHELL` and the manifest exists, that `APP_VERSION`
+  matches the cache name, and that no page has an inline script.
 - `npm run test:e2e`: Playwright on desktop and mobile Chromium against
   `npm start`. Fails on console errors (CSP violations included) and warns about
   requests to other origins. Includes an axe scan of the form, a complete
@@ -22,9 +23,9 @@ restore it, and credits. Commands and conventions live here.
 - `npm run deploy`: `npm test && wrangler deploy` to the `tearsheet` Worker on
   `tearsheet.tinkered.app`. One environment only: no stored data, no migrations.
 
-Workers Builds settings, once the repository is connected: production branch
-`main`, empty build command, deploy command `npm run deploy`, and `npm test` as
-the deploy command for other branches.
+Workers Builds deploys every push to `main`: empty build command, deploy
+command `npm run deploy`, and `npm test` as the deploy command for other
+branches.
 
 `allowScripts` in `package.json` pins the `esbuild` and `workerd` versions whose
 install scripts npm may run. Update it when a Wrangler upgrade changes those
@@ -38,8 +39,11 @@ There is no build step. Third-party libraries and fonts are vendored in
 Only `public/` is served:
 
 - `index.html`: the interface and the printable leaflet template.
-- `app.js`: form handling, map, photo, QR code, validation, translations, and
-  `APP_VERSION`.
+- `logic.js`: the rules that need no page (area units, phone and link
+  validation). It never touches `document` or `window`, so `npm test` covers
+  it in Node. Put new rules of that kind here, with a test.
+- `app.js`: form handling, map, photo, QR code, translations, and
+  `APP_VERSION`. It loads after `logic.js` and calls its functions as globals.
 - `styles.css`: app styling, leaflet layout, and print rules.
 - `theme-init.js`: applies the saved theme before first paint.
 - `privacy.html`, `privacy.js`: the privacy notice and licence credits, in English
@@ -50,11 +54,13 @@ Only `public/` is served:
 - `sw.js`, `manifest.webmanifest`, `favicon.svg`, `icons/`: offline cache and PWA
   files.
 - `vendor/`: Leaflet, the QR code generator, html2canvas, pdf-lib, the Inter and
-  Sora fonts, and their licence texts.
+  Sora fonts, and their licence texts. `vendor/NOTICE.md` records each
+  library's version and source, because `npm audit` cannot see them; update it
+  when a library changes.
 - `_headers`: security headers, `no-cache` on `sw.js`, and `noindex` on the
   privacy notice and licence texts.
 
-Repo-only: `scripts/check.mjs`, `test/e2e/`, `playwright.config.js`,
+Repo-only: `scripts/check.mjs`, `test/logic.test.mjs`, `test/e2e/`, `playwright.config.js`,
 `wrangler.jsonc`, `package.json`.
 
 ## Conventions

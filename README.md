@@ -38,6 +38,8 @@ which also has the commands, conventions and file layout.
 - Inter and Sora fonts, SIL Open Font License 1.1
 - Map data © [OpenStreetMap contributors](https://www.openstreetmap.org/copyright)
 
-The licence texts ship in `public/vendor/`.
+The licence texts ship in `public/vendor/`, and
+[NOTICE.md](public/vendor/NOTICE.md) there records the version and source of
+each library.
 
 Made by Kuba (kuba@tinkered.app).
