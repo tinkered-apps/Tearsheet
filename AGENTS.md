@@ -5,11 +5,12 @@ restore it, and credits. Commands and conventions live here.
 
 ## Commands
 
-- `npm install`: installs the pinned Wrangler, Playwright and axe. On a new machine,
+- `npm install`: installs the pinned Wrangler, Playwright, axe and ESLint. On a new machine,
   also run `npx playwright install chromium` once.
 - `npm start`: `wrangler dev` at `http://127.0.0.1:8765/`, serving `public/`
   with the production headers from `public/_headers`.
-- `npm test`: `scripts/check.mjs`. Checks syntax, that EN and PL have the same
+- `npm test`: ESLint with the recommended rules (`eslint.config.mjs`), then
+  `scripts/check.mjs`. The script checks syntax, that EN and PL have the same
   translation keys, that every file in `SHELL` and the manifest exists, that
   `APP_VERSION` matches the cache name, and that no page has an inline script.
 - `npm run test:e2e`: Playwright on desktop and mobile Chromium against
