@@ -7,10 +7,20 @@ import { readFile } from "node:fs/promises";
 const source = (file) => readFileSync(new URL(`../../public/${file}`, import.meta.url), "utf8");
 const APP_VERSION = source("app.js").match(/^const APP_VERSION = "([^"]+)";$/m)[1];
 
+// 1x1 transparent PNG. Map tiles are answered locally, so a run neither waits on
+// OpenStreetMap nor loads its servers. The page still makes the requests, and
+// they are still counted as leaving the origin below.
+const PIXEL = Buffer.from(
+  "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=",
+  "base64");
+const stubTiles = (context) => context.route("https://tile.openstreetmap.org/**", (route) =>
+  route.fulfill({ status: 200, contentType: "image/png", body: PIXEL, headers: { "Access-Control-Allow-Origin": "*" } }));
+
 // Every test fails on a console error or uncaught exception (CSP violations
 // included) and warns about requests that leave the app's own origin.
 const test = base.extend({
   page: async ({ page, baseURL }, use) => {
+    await stubTiles(page.context());
     const errors = [];
     const origin = new URL(baseURL).origin;
     const external = new Set();
@@ -204,6 +214,7 @@ test("text fields survive refresh but clear in a new browser session", async ({ 
   await expect(page.locator("#validation-list")).not.toContainText("enter a phone number");
 
   const freshContext = await browser.newContext({ storageState: await context.storageState() });
+  await stubTiles(freshContext);
   try {
     const freshPage = await freshContext.newPage();
     await freshPage.goto("/");
