@@ -2,7 +2,22 @@
   <img src="public/icons/social-card.png" alt="The Tearsheet name next to a property leaflet with a row of tear-off phone tabs along its bottom edge." width="760">
 </p>
 
-# Tearsheet
+<h1 align="center">Tearsheet</h1>
+
+<p align="center">
+  <b>A property leaflet with tear-off phone tabs, on one A4 sheet.</b><br>
+  Fill in the listing, drop a pin on the map, print.
+</p>
+
+<p align="center">
+  <a href="https://tearsheet.tinkered.app/"><b>▶ Make a leaflet</b></a>
+  &nbsp;·&nbsp; English and Polish
+  &nbsp;·&nbsp; installs as an app
+  &nbsp;·&nbsp; works offline
+  &nbsp;·&nbsp; no account
+</p>
+
+---
 
 Tearsheet builds a real-estate leaflet on one landscape A4 sheet: a photo, a
 map pin, the key facts, an optional QR code, and 20 tear-off phone tabs along
