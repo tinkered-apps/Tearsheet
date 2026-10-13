@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "wrangler dev --ip 127.0.0.1 --port 8765",
-    "test": "eslint . && node scripts/check.mjs",
+    "test": "eslint . && node scripts/check.mjs && node --test test/*.test.mjs",
     "test:e2e": "playwright test",
     "deploy": "npm test && wrangler deploy"
   },

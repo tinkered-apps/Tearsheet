@@ -11,7 +11,7 @@ const read = (file) => readFileSync(file, "utf8");
 const fail = (message) => errors.push(message);
 
 // Syntax
-for (const file of ["app.js", "sw.js", "privacy.js"]) {
+for (const file of ["logic.js", "app.js", "sw.js", "privacy.js"]) {
   try {
     new vm.Script(read(file), { filename: file });
   } catch (error) {

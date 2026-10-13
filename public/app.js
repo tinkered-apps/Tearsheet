@@ -1,7 +1,7 @@
 "use strict";
 
 // Shown in the footer. Keep in step with CACHE in sw.js; npm test checks it.
-const APP_VERSION = "1.01";
+const APP_VERSION = "1.02";
 
 const MAP_PROVIDER = {
   tiles: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -303,7 +303,6 @@ const THEME_STORE = "tearsheet.theme";
 const LANGUAGE_STORE = "tearsheet.language";
 const UNITS_STORE = "tearsheet.units";
 const FORM_STORE = "tearsheet.form";
-const AREA_FACTORS = { m2: 1, a: 100, ha: 10000, ft2: 0.09290304, ac: 4046.8564224 };
 const AREA_OPTIONS = { metric: ["m2", "a", "ha"], imperial: ["ft2", "ac"] };
 const AREA_LABELS = { m2: "m²", a: "a", ha: "ha", ft2: "ft²", ac: "ac" };
 const FIELD_MAP = {
@@ -503,7 +502,7 @@ function bindForm() {
     const squareMeters = currentAreaSqMeters();
     state.areaUnit = elements["area-unit"].value;
     if (squareMeters !== null) {
-      elements.area.value = Number((squareMeters / AREA_FACTORS[state.areaUnit]).toPrecision(10));
+      elements.area.value = areaFromSqMeters(squareMeters, state.areaUnit);
       state.fields.area = elements.area.value;
     }
     saveForm();
@@ -516,7 +515,7 @@ function bindForm() {
       const squareMeters = currentAreaSqMeters();
       setUnits(button.dataset.units);
       if (squareMeters !== null) {
-        elements.area.value = Number((squareMeters / AREA_FACTORS[state.areaUnit]).toPrecision(10));
+        elements.area.value = areaFromSqMeters(squareMeters, state.areaUnit);
         state.fields.area = elements.area.value;
       }
       try {
@@ -1022,13 +1021,12 @@ function renderPreview() {
 }
 
 function numericArea() {
-  const value = Number(state.fields.area);
-  return state.fields.area.trim() && Number.isFinite(value) && value > 0 ? value : null;
+  return parseArea(state.fields.area);
 }
 
 function currentAreaSqMeters() {
   const value = numericArea();
-  return value === null ? null : value * AREA_FACTORS[state.areaUnit];
+  return value === null ? null : areaToSqMeters(value, state.areaUnit);
 }
 
 function renderQr(value) {
@@ -1081,22 +1079,6 @@ function renderTabs() {
   }
 
   elements["preview-tabs"].replaceChildren(fragment);
-}
-
-function isValidHttpUrl(value) {
-  if (!value) return false;
-  try {
-    const parsed = new URL(value);
-    return parsed.protocol === "http:" || parsed.protocol === "https:";
-  } catch (error) {
-    return false;
-  }
-}
-
-function isValidPhone(value) {
-  const phone = value.trim();
-  const digits = phone.replace(/\D/g, "");
-  return /^\+?[0-9 ()-]+$/.test(phone) && digits.length >= 7 && digits.length <= 15;
 }
 
 function validate() {
@@ -1199,10 +1181,6 @@ function dockPrintButton() {
   const toolbar = elements["preview-toolbar"];
   const docked = toolbar.getBoundingClientRect().top <= window.innerHeight - button.offsetHeight - 16;
   button.classList.toggle("is-docked", docked);
-}
-
-function clamp(value, min, max) {
-  return Math.min(max, Math.max(min, value));
 }
 
 function init() {
