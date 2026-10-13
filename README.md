@@ -13,7 +13,7 @@
   <a href="https://tearsheet.tinkered.app/"><b>▶ Make a leaflet</b></a>
   &nbsp;·&nbsp; English and Polish
   &nbsp;·&nbsp; installs as an app
-  &nbsp;·&nbsp; works offline
+  &nbsp;·&nbsp; opens offline
   &nbsp;·&nbsp; no account
 </p>
 
@@ -22,7 +22,9 @@
 Tearsheet builds a real-estate leaflet on one landscape A4 sheet: a photo, a
 map pin, the key facts, an optional QR code, and 20 tear-off phone tabs along
 the bottom edge. It works in English and Polish, installs as a PWA, and opens
-offline once loaded.
+offline once loaded. The map and the place search need a connection, and the
+app does not print a leaflet until the map has loaded, so offline you can
+prepare the text and photo but not finish the sheet.
 
 On Firefox for Android, the app downloads a landscape A4 PDF directly because
 its system print dialog scales the leaflet down. Other browsers use printing.
