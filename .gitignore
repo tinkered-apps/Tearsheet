@@ -28,3 +28,6 @@ desktop.ini
 
 # Legal audit working files (drafts with placeholders)
 .audyt-prawny/
+
+# Marketing assets (local only)
+.marketing/
