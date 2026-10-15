@@ -623,7 +623,7 @@ button:disabled,
 
 .map-file-notice {
   position: absolute;
-  z-index: 1000;
+  z-index: 1001; /* above Leaflet's controls */
   inset: 16px;
   display: grid;
   place-content: center;
@@ -636,6 +636,10 @@ button:disabled,
   font-size: 12px;
   font-weight: 700;
   line-height: 1.5;
+}
+
+.map-file-notice[hidden] {
+  display: none;
 }
 
 .leaflet-map-wrap .map-file-notice {
@@ -999,6 +1003,14 @@ a.brand {
   min-height: 0;
   grid-template-rows: 1.55fr 1fr;
   gap: 5mm;
+}
+
+.leaflet-sheet.no-map .leaflet-media {
+  grid-template-rows: 1fr;
+}
+
+.leaflet-sheet.no-map .leaflet-map-wrap {
+  display: none;
 }
 
 .leaflet-photo,

@@ -1,7 +1,7 @@
 "use strict";
 
 // Shown in the footer. Keep in step with CACHE in sw.js; npm test checks it.
-const APP_VERSION = "1.02";
+const APP_VERSION = "1.03";
 
 const MAP_PROVIDER = {
   tiles: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -118,6 +118,7 @@ const translations = {
     photoSizeError: "Zdjęcie jest większe niż 15 MB.",
     photoReadError: "Nie udało się odczytać zdjęcia.",
     mapTileError: "Nie udało się wczytać części mapy. Sprawdź połączenie i spróbuj ponownie.",
+    mapOffline: "Brak połączenia, więc nie ma mapy. Połącz się z internetem, żeby ją dodać, albo wydrukuj ulotkę bez niej.",
     localServerRequired: "Mapa działa tylko na stronie otwartej przez serwer WWW. Zamknij tę kartę i uruchom npm start.",
     printBlocked: "Popraw wskazane pola przed drukiem.",
     themeAuto: "Motyw: zgodny z systemem",
@@ -229,6 +230,7 @@ const translations = {
     photoSizeError: "The photograph is larger than 15 MB.",
     photoReadError: "The photograph could not be read.",
     mapTileError: "Part of the map could not load. Check your connection and try again.",
+    mapOffline: "You're offline, so there is no map. Connect to the internet to add one, or print the leaflet without it.",
     localServerRequired: "The map only works when the page is served by a web server. Close this tab and run npm start.",
     printBlocked: "Correct the listed fields before printing.",
     themeAuto: "Theme: follows your system",
@@ -280,6 +282,7 @@ const state = {
     marker: null,
     tilesReady: false,
     tileError: false,
+    offline: !navigator.onLine,
     localFileBlocked: window.location.protocol === "file:"
   },
   lastSearchAt: 0
@@ -290,6 +293,7 @@ let pickerMap;
 let previewMap;
 let pickerMarker;
 let previewMarker;
+let pickerTileLayer;
 let previewTileLayer;
 let validationTimer;
 let photoRequest = 0;
@@ -399,7 +403,7 @@ function initMaps() {
     referrerPolicy: "strict-origin-when-cross-origin"
   };
 
-  L.tileLayer(MAP_PROVIDER.tiles, tileOptions).addTo(pickerMap);
+  pickerTileLayer = L.tileLayer(MAP_PROVIDER.tiles, tileOptions).addTo(pickerMap);
   previewTileLayer = L.tileLayer(MAP_PROVIDER.tiles, tileOptions);
 
   previewTileLayer
@@ -421,6 +425,46 @@ function initMaps() {
 
   pickerMap.on("click", (event) => setMarker(event.latlng, true));
   pickerMap.on("moveend zoomend", syncMapView);
+
+  const offlineNotice = document.createElement("div");
+  offlineNotice.id = "map-offline-notice";
+  offlineNotice.className = "map-file-notice";
+  offlineNotice.dataset.i18n = "mapOffline";
+  offlineNotice.hidden = true;
+  document.getElementById("map-picker").appendChild(offlineNotice);
+
+  window.addEventListener("offline", () => {
+    state.map.offline = true;
+    scheduleValidation();
+  });
+  window.addEventListener("online", () => {
+    state.map.offline = false;
+    state.map.tileError = false;
+    // Tiles that failed while offline are not retried on their own.
+    pickerTileLayer.redraw();
+    previewTileLayer.redraw();
+    scheduleValidation();
+  });
+}
+
+// Offline, a leaflet whose map has not loaded prints without one: the photo
+// takes the map's space. A map that loaded before the connection dropped stays.
+function mapUnavailable() {
+  if (state.map.localFileBlocked || !state.map.offline) return false;
+  return !(state.map.tilesReady && !state.map.tileError && state.map.marker);
+}
+
+function updateMapAvailability() {
+  const noMap = mapUnavailable();
+  const notice = document.getElementById("map-offline-notice");
+  if (notice) notice.hidden = !noMap;
+  const sheet = elements["leaflet-sheet"];
+  if (sheet.classList.contains("no-map") === noMap) return;
+  sheet.classList.toggle("no-map", noMap);
+  // Keep the crop editor the same shape as the leaflet's photo frame.
+  const frame = elements["preview-photo"].parentElement;
+  elements["photo-dropzone"].style.aspectRatio = noMap && frame.offsetHeight ? `${frame.offsetWidth} / ${frame.offsetHeight}` : "";
+  applyPhotoPosition();
 }
 
 function showLocalFileNotices() {
@@ -1104,13 +1148,14 @@ function validate() {
   }
   if (state.photo.loading) issues.push(t("photoProcessing"));
   else if (!state.photo.url) issues.push(t("missingPhoto"));
-  if (!state.map.marker) issues.push(t("missingMarker"));
+  const noMap = mapUnavailable();
+  if (!state.map.marker && !noMap) issues.push(t("missingMarker"));
   if (fields.redirectUrl.trim() && !isValidHttpUrl(fields.redirectUrl.trim())) {
     issues.push(t("invalidUrl"));
   }
   if (state.map.localFileBlocked) {
     issues.push(t("localServerRequired"));
-  } else if (!state.map.tilesReady || state.map.tileError) {
+  } else if (!noMap && (!state.map.tilesReady || state.map.tileError)) {
     issues.push(state.map.tileError ? t("mapTileError") : t("mapLoading"));
   }
   if (hasLayoutOverflow()) issues.push(t("layoutOverflow"));
@@ -1141,6 +1186,7 @@ function scheduleValidation() {
 }
 
 function updateValidation() {
+  updateMapAvailability();
   const issues = validate();
   const ready = issues.length === 0;
   const phoneInvalid = Boolean(state.fields.phone.trim()) && !isValidPhone(state.fields.phone);

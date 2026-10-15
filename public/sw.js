@@ -2,7 +2,7 @@
 
 // Caches the app shell only. Form data, photos and map tiles are never stored.
 // The name carries APP_VERSION from app.js; npm test checks they match.
-const CACHE = "tearsheet-v1.02";
+const CACHE = "tearsheet-v1.03";
 const SHELL = [
   "./",
   "privacy",

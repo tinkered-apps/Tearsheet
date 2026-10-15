@@ -38,7 +38,7 @@ const test = base.extend({
   }
 });
 
-async function fillListing(page) {
+async function fillListing(page, { pin = true } = {}) {
   await page.fill("#title", "Building plot beside a forest");
   await page.fill("#location", "Warsaw, Mazovia");
   await page.fill("#area", "1208");
@@ -47,7 +47,7 @@ async function fillListing(page) {
   await page.fill("#description", "Quiet street, level ground, gas and water at the boundary.");
   await page.fill("#phone", "+48 500 100 200");
   await page.setInputFiles("#photo", "public/icons/icon-512.png");
-  await page.locator("#map-picker").click();
+  if (pin) await page.locator("#map-picker").click();
 }
 
 test("a complete listing is ready to print", async ({ page }) => {
@@ -407,6 +407,43 @@ test("a fresh install opens the app and privacy notice offline, by either URL", 
   } finally {
     await context.setOffline(false);
   }
+});
+
+test("offline, the leaflet prints without a map and gets it back online", async ({ page, context, browserName }, testInfo) => {
+  await page.goto("/");
+  await context.setOffline(true);
+  try {
+    await fillListing(page, { pin: false });
+    await expect(page.locator("#map-offline-notice")).toBeVisible();
+    await expect(page.locator("#map-offline-notice")).toContainText("Connect to the internet to add one");
+    await expect(page.locator(".leaflet-map-wrap")).toBeHidden();
+    await expect(page.locator("#validation-title")).toHaveText("The leaflet is ready to print", { timeout: 20_000 });
+    await expect(page.locator("#print-button")).toHaveAttribute("aria-disabled", "false");
+
+    // The photo takes the whole media column, on screen and in print.
+    const heights = () => page.evaluate(() => [
+      document.querySelector(".leaflet-photo").getBoundingClientRect().height,
+      document.querySelector(".leaflet-media").getBoundingClientRect().height
+    ]);
+    const [photo, media] = await heights();
+    expect(photo).toBeCloseTo(media, 0);
+    if (browserName === "chromium") {
+      await page.emulateMedia({ media: "print" });
+      const [printPhoto, printMedia] = await heights();
+      expect(printPhoto).toBeCloseTo(printMedia, 0);
+      const pdf = await page.pdf({ width: "297mm", height: "210mm", printBackground: true, path: testInfo.outputPath("leaflet-no-map.pdf") });
+      expect(pdf.toString("latin1").match(/\/Type\s*\/Page[^s]/g) || []).toHaveLength(1);
+      await page.emulateMedia({ media: "screen" });
+    }
+  } finally {
+    await context.setOffline(false);
+  }
+
+  await expect(page.locator("#map-offline-notice")).toBeHidden();
+  await expect(page.locator(".leaflet-map-wrap")).toBeVisible();
+  await expect(page.locator("#validation-list")).toContainText("mark the location on the map");
+  await page.locator("#map-picker").click();
+  await expect(page.locator("#validation-title")).toHaveText("The leaflet is ready to print", { timeout: 20_000 });
 });
 
 test("the leaflet prints on exactly one A4 landscape page", async ({ page, browserName }, testInfo) => {
