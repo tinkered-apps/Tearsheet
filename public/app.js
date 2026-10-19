@@ -251,6 +251,7 @@ const translations = {
 
 const state = {
   language: "en",
+  tabsOverflow: false,
   units: "metric",
   areaUnit: "m2",
   fields: {
@@ -1123,6 +1124,45 @@ function renderTabs() {
   }
 
   elements["preview-tabs"].replaceChildren(fragment);
+  fitTabs();
+}
+
+// Base and smallest sizes for the text on each tear-off tab, in points.
+const TAB_TAG_PT = 6;
+const TAB_TAG_MIN_PT = 4;
+const TAB_PHONE_PT = 16;
+const TAB_PHONE_MIN_PT = 10;
+
+// Keywords wrap at spaces; a word wider than its tab, or a phone number longer
+// than the tab, shrinks to fit. All 20 tabs are identical, so the first is measured.
+// What still does not fit at the smallest size blocks printing.
+function fitTabs() {
+  const strip = elements["preview-tabs"];
+  const tab = strip.firstElementChild;
+  strip.style.removeProperty("--tear-tag-size");
+  strip.style.removeProperty("--tear-phone-size");
+  state.tabsOverflow = false;
+  if (!tab || !tab.clientWidth) return;
+
+  const style = getComputedStyle(tab);
+  const room = tab.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+  const tags = [...tab.querySelectorAll(".tear-tag")];
+  const widest = Math.max(0, ...tags.map((tag) => tag.scrollWidth));
+  if (widest > room) {
+    strip.style.setProperty("--tear-tag-size", `${Math.max(TAB_TAG_MIN_PT, (TAB_TAG_PT * room) / widest)}pt`);
+  }
+
+  const wrap = tab.querySelector(".tear-phone-wrap");
+  const phone = tab.querySelector(".tear-phone");
+  // Letter spacing does not scale with the font size, so refine in a few steps.
+  let phonePt = TAB_PHONE_PT;
+  for (let step = 0; step < 4 && phone.offsetWidth > wrap.clientHeight && phonePt > TAB_PHONE_MIN_PT; step += 1) {
+    phonePt = Math.max(TAB_PHONE_MIN_PT, (phonePt * wrap.clientHeight) / phone.offsetWidth - 0.1);
+    strip.style.setProperty("--tear-phone-size", `${phonePt}pt`);
+  }
+
+  state.tabsOverflow =
+    tags.some((tag) => tag.scrollWidth > room + 0.5) || phone.offsetWidth > wrap.clientHeight + 0.5;
 }
 
 function validate() {
@@ -1174,7 +1214,7 @@ function hasLayoutOverflow() {
     elements["preview-phone"],
     ...document.querySelectorAll(".fact-value")
   ];
-  return monitored.some((element) => (
+  return state.tabsOverflow || monitored.some((element) => (
     element.scrollHeight > element.clientHeight + verticalTolerance ||
     element.scrollWidth > element.clientWidth + horizontalTolerance
   ));
@@ -1249,6 +1289,11 @@ function init() {
   restoreForm();
   setLanguage(translations[savedLanguage] ? savedLanguage : "en");
   scalePreview();
+  // The tab text is measured, so measure it again once the web fonts are in.
+  document.fonts.ready.then(() => {
+    fitTabs();
+    scheduleValidation();
+  });
 
   dockPrintButton();
   window.addEventListener("scroll", dockPrintButton, { passive: true });

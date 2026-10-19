@@ -95,6 +95,34 @@ test("a genuinely clipped fact still blocks printing", async ({ page }) => {
   await expect(page.locator("#print-button")).toHaveAttribute("aria-disabled", "true");
 });
 
+// True when every keyword and phone number sits inside its own tab.
+const tabsContainTheirText = (page) => page.evaluate(() => [...document.querySelectorAll("#preview-tabs .leaflet-tab")].every((tab) => {
+  const box = tab.getBoundingClientRect();
+  return [...tab.querySelectorAll(".tear-tag, .tear-phone")].every((text) => {
+    const r = text.getBoundingClientRect();
+    return r.left >= box.left - 0.5 && r.right <= box.right + 0.5 && r.top >= box.top - 0.5 && r.bottom <= box.bottom + 0.5;
+  });
+}));
+
+test("long tab keywords and the longest phone number stay inside each tab", async ({ page }) => {
+  await page.goto("/");
+  await fillListing(page);
+  await page.fill("#tear-one", "Near Warsaw");
+  await page.fill("#tear-two", "Nieruchomości");
+  await page.fill("#phone", "+48 600 000 000 000");
+  await expect(page.locator("#validation-title")).toHaveText("The flyer is ready to print", { timeout: 20_000 });
+  expect(await tabsContainTheirText(page)).toBe(true);
+});
+
+test("a tab keyword too long for its tab blocks printing", async ({ page }) => {
+  await page.goto("/");
+  await fillListing(page);
+  await expect(page.locator("#validation-title")).toHaveText("The flyer is ready to print", { timeout: 20_000 });
+  await page.fill("#tear-one", "W".repeat(14));
+  await expect(page.locator("#validation-list")).toContainText("the content does not fit on the page");
+  await expect(page.locator("#print-button")).toHaveAttribute("aria-disabled", "true");
+});
+
 test("the focused field uses a neutral border even while an error is shown", async ({ page }) => {
   await page.goto("/");
   await page.fill("#phone", "123");

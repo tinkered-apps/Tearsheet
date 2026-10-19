@@ -1302,6 +1302,7 @@ a.brand {
 }
 
 .tear-tags {
+  max-width: 100%;
   text-align: center;
   line-height: 1.15;
 }
@@ -1310,10 +1311,9 @@ a.brand {
   display: block;
   color: var(--accent-dark);
   font-family: "Sora", sans-serif;
-  font-size: 6pt;
+  font-size: var(--tear-tag-size, 6pt);
   font-weight: 700;
   text-transform: uppercase;
-  white-space: nowrap;
 }
 
 .tear-phone-wrap {
@@ -1328,7 +1328,7 @@ a.brand {
   left: 50%;
   color: var(--ink);
   font-family: "Sora", sans-serif;
-  font-size: 16pt;
+  font-size: var(--tear-phone-size, 16pt);
   font-weight: 800;
   letter-spacing: 0.5px;
   transform: translate(-50%, -50%) rotate(-90deg);
