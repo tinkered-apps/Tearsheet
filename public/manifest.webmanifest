@@ -1,7 +1,7 @@
 {
   "name": "Tearsheet",
   "short_name": "Tearsheet",
-  "description": "Build and print an A4 property leaflet with tear-off phone tabs. Your listing and photo stay in your browser.",
+  "description": "Build and print an A4 property flyer with tear-off phone tabs. Your listing and photo stay in your browser.",
   "lang": "en",
   "start_url": "./",
   "scope": "./",
@@ -15,6 +15,6 @@
   ],
   "screenshots": [
     { "src": "screenshots/narrow.png", "sizes": "824x1830", "type": "image/png", "form_factor": "narrow", "label": "Write the details of a sample property" },
-    { "src": "screenshots/wide.png", "sizes": "2400x1350", "type": "image/png", "form_factor": "wide", "label": "Edit a listing beside its A4 leaflet preview" }
+    { "src": "screenshots/wide.png", "sizes": "2400x1350", "type": "image/png", "form_factor": "wide", "label": "Edit a listing beside its A4 flyer preview" }
   ]
 }

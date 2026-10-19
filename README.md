@@ -1,16 +1,16 @@
 <p align="center">
-  <img src="public/icons/social-card.png" alt="The Tearsheet name next to a property leaflet with a row of tear-off phone tabs along its bottom edge." width="760">
+  <img src="public/icons/social-card.png" alt="The Tearsheet name next to a property flyer with a row of tear-off phone tabs along its bottom edge." width="760">
 </p>
 
 <h1 align="center">Tearsheet</h1>
 
 <p align="center">
-  <b>A property leaflet with tear-off phone tabs, on one A4 sheet.</b><br>
+  <b>A property flyer with tear-off phone tabs, on one A4 sheet.</b><br>
   Fill in the listing, drop a pin on the map, print.
 </p>
 
 <p align="center">
-  <a href="https://tearsheet.tinkered.app/"><b>▶ Make a leaflet</b></a>
+  <a href="https://tearsheet.tinkered.app/"><b>▶ Make a flyer</b></a>
   &nbsp;·&nbsp; English and Polish
   &nbsp;·&nbsp; installs as an app
   &nbsp;·&nbsp; opens offline
@@ -19,19 +19,19 @@
 
 ---
 
-Tearsheet builds a real-estate leaflet on one landscape A4 sheet: a photo, a
+Tearsheet builds a real-estate flyer on one landscape A4 sheet: a photo, a
 map pin, the key facts, an optional QR code, and 20 tear-off phone tabs along
 the bottom edge. It works in English and Polish, installs as a PWA, and opens
 offline once loaded. The map and the place search need a connection. Offline,
-the map picker says so, and the leaflet prints without a map: the photo takes
+the map picker says so, and the flyer prints without a map: the photo takes
 its space.
 
 On Firefox for Android, the app downloads a landscape A4 PDF directly because
-its system print dialog scales the leaflet down. Other browsers use printing.
+its system print dialog scales the flyer down. Other browsers use printing.
 
 Live at <https://tearsheet.tinkered.app>
 
-## Making a leaflet
+## Making a flyer
 
 1. Fill in the listing: title, location, area, purpose, utilities, a description
    and a phone number. The area converts between m², ares, hectares, ft² and

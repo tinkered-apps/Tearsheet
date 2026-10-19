@@ -13,8 +13,9 @@ const logic = {
 };
 
 export default [
-  // public/vendor/ is other people's code, copied in as released.
-  { ignores: ["node_modules/", "test-results/", "playwright-report/", ".wrangler/", "public/vendor/"] },
+  // public/vendor/ is other people's code, copied in as released. .marketing/ holds local,
+  // gitignored video projects.
+  { ignores: ["node_modules/", "test-results/", "playwright-report/", ".wrangler/", "public/vendor/", ".marketing/"] },
 
   js.configs.recommended,
   {

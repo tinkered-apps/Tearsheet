@@ -1,7 +1,7 @@
 "use strict";
 
 // Shown in the footer. Keep in step with CACHE in sw.js; npm test checks it.
-const APP_VERSION = "1.03";
+const APP_VERSION = "1.04";
 
 const MAP_PROVIDER = {
   tiles: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -136,8 +136,8 @@ const translations = {
     qrAlt: "Kod QR"
   },
   en: {
-    pageTitle: "Tearsheet · property leaflet generator",
-    brandDescriptor: "A4 property leaflets",
+    pageTitle: "Tearsheet · property flyer generator",
+    brandDescriptor: "A4 property flyers",
     contentHeading: "Listing content",
     contentHint: "Fields marked with an asterisk are required.",
     titleLabel: "Title *",
@@ -187,7 +187,7 @@ const translations = {
     privacyText: "Text fields return when you refresh this tab and are cleared when you open the page anew. The photo is lost on refresh. Your details are not uploaded. OpenStreetMap serves the map and place search. Your theme, language and unit choices are remembered.",
     privacyLink: "Privacy notice",
     footerPrivacy: "Privacy",
-    previewHeading: "Generated leaflet",
+    previewHeading: "Generated flyer",
     printButton: "Review and print",
     downloadPdf: "Download A4 PDF",
     pdfPreparing: "Preparing PDF…",
@@ -203,8 +203,8 @@ const translations = {
     printHelp: "In the print dialog choose A4, landscape, no margins, and enable background graphics.",
     defaultBadge: "For sale",
     defaultMapLabel: "Location",
-    validationReady: "The leaflet is ready to print",
-    validationNeedsWork: "Complete the leaflet before printing",
+    validationReady: "The flyer is ready to print",
+    validationNeedsWork: "Complete the flyer before printing",
     missingTitle: "enter a title",
     missingLocation: "enter a location",
     missingArea: "enter the area",
@@ -230,7 +230,7 @@ const translations = {
     photoSizeError: "The photograph is larger than 15 MB.",
     photoReadError: "The photograph could not be read.",
     mapTileError: "Part of the map could not load. Check your connection and try again.",
-    mapOffline: "You're offline, so there is no map. Connect to the internet to add one, or print the leaflet without it.",
+    mapOffline: "You're offline, so there is no map. Connect to the internet to add one, or print the flyer without it.",
     localServerRequired: "The map only works when the page is served by a web server. Close this tab and run npm start.",
     printBlocked: "Correct the listed fields before printing.",
     themeAuto: "Theme: follows your system",
@@ -240,17 +240,18 @@ const translations = {
     unitsLabel: "Area units",
     metricUnits: "Metric units",
     imperialUnits: "Imperial units",
-    editorLabel: "Leaflet editor",
-    previewLabel: "Leaflet preview",
-    sheetLabel: "Printable leaflet",
+    editorLabel: "Flyer editor",
+    previewLabel: "Flyer preview",
+    sheetLabel: "Printable flyer",
     pickerLabel: "Interactive property location map",
-    previewMapLabel: "Leaflet location map",
+    previewMapLabel: "Flyer location map",
     qrAlt: "QR code"
   }
 };
 
 const state = {
   language: "en",
+  tabsOverflow: false,
   units: "metric",
   areaUnit: "m2",
   fields: {
@@ -447,7 +448,7 @@ function initMaps() {
   });
 }
 
-// Offline, a leaflet whose map has not loaded prints without one: the photo
+// Offline, a flyer whose map has not loaded prints without one: the photo
 // takes the map's space. A map that loaded before the connection dropped stays.
 function mapUnavailable() {
   if (state.map.localFileBlocked || !state.map.offline) return false;
@@ -461,7 +462,7 @@ function updateMapAvailability() {
   const sheet = elements["leaflet-sheet"];
   if (sheet.classList.contains("no-map") === noMap) return;
   sheet.classList.toggle("no-map", noMap);
-  // Keep the crop editor the same shape as the leaflet's photo frame.
+  // Keep the crop editor the same shape as the flyer's photo frame.
   const frame = elements["preview-photo"].parentElement;
   elements["photo-dropzone"].style.aspectRatio = noMap && frame.offsetHeight ? `${frame.offsetWidth} / ${frame.offsetHeight}` : "";
   applyPhotoPosition();
@@ -1123,6 +1124,45 @@ function renderTabs() {
   }
 
   elements["preview-tabs"].replaceChildren(fragment);
+  fitTabs();
+}
+
+// Base and smallest sizes for the text on each tear-off tab, in points.
+const TAB_TAG_PT = 6;
+const TAB_TAG_MIN_PT = 4;
+const TAB_PHONE_PT = 16;
+const TAB_PHONE_MIN_PT = 10;
+
+// Keywords wrap at spaces; a word wider than its tab, or a phone number longer
+// than the tab, shrinks to fit. All 20 tabs are identical, so the first is measured.
+// What still does not fit at the smallest size blocks printing.
+function fitTabs() {
+  const strip = elements["preview-tabs"];
+  const tab = strip.firstElementChild;
+  strip.style.removeProperty("--tear-tag-size");
+  strip.style.removeProperty("--tear-phone-size");
+  state.tabsOverflow = false;
+  if (!tab || !tab.clientWidth) return;
+
+  const style = getComputedStyle(tab);
+  const room = tab.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+  const tags = [...tab.querySelectorAll(".tear-tag")];
+  const widest = Math.max(0, ...tags.map((tag) => tag.scrollWidth));
+  if (widest > room) {
+    strip.style.setProperty("--tear-tag-size", `${Math.max(TAB_TAG_MIN_PT, (TAB_TAG_PT * room) / widest)}pt`);
+  }
+
+  const wrap = tab.querySelector(".tear-phone-wrap");
+  const phone = tab.querySelector(".tear-phone");
+  // Letter spacing does not scale with the font size, so refine in a few steps.
+  let phonePt = TAB_PHONE_PT;
+  for (let step = 0; step < 4 && phone.offsetWidth > wrap.clientHeight && phonePt > TAB_PHONE_MIN_PT; step += 1) {
+    phonePt = Math.max(TAB_PHONE_MIN_PT, (phonePt * wrap.clientHeight) / phone.offsetWidth - 0.1);
+    strip.style.setProperty("--tear-phone-size", `${phonePt}pt`);
+  }
+
+  state.tabsOverflow =
+    tags.some((tag) => tag.scrollWidth > room + 0.5) || phone.offsetWidth > wrap.clientHeight + 0.5;
 }
 
 function validate() {
@@ -1174,7 +1214,7 @@ function hasLayoutOverflow() {
     elements["preview-phone"],
     ...document.querySelectorAll(".fact-value")
   ];
-  return monitored.some((element) => (
+  return state.tabsOverflow || monitored.some((element) => (
     element.scrollHeight > element.clientHeight + verticalTolerance ||
     element.scrollWidth > element.clientWidth + horizontalTolerance
   ));
@@ -1249,6 +1289,11 @@ function init() {
   restoreForm();
   setLanguage(translations[savedLanguage] ? savedLanguage : "en");
   scalePreview();
+  // The tab text is measured, so measure it again once the web fonts are in.
+  document.fonts.ready.then(() => {
+    fitTabs();
+    scheduleValidation();
+  });
 
   dockPrintButton();
   window.addEventListener("scroll", dockPrintButton, { passive: true });
