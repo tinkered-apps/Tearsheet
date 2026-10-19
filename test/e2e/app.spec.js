@@ -56,7 +56,7 @@ test("a complete listing is ready to print", async ({ page }) => {
   await page.fill("#redirect-url", "https://example.com/listing");
 
   await expect(page.locator("#qr-image")).toHaveAttribute("src", /^data:image\//);
-  await expect(page.locator("#validation-title")).toHaveText("The leaflet is ready to print", { timeout: 20_000 });
+  await expect(page.locator("#validation-title")).toHaveText("The flyer is ready to print", { timeout: 20_000 });
   await expect(page.locator("#print-button")).toHaveAttribute("aria-disabled", "false");
   await expect(page.locator("#preview-tabs .leaflet-tab")).toHaveCount(20);
 });
@@ -69,7 +69,7 @@ test("Firefox Android downloads a compact A4 PDF", async ({ page }, testInfo) =>
   });
   await page.goto("/");
   await fillListing(page);
-  await expect(page.locator("#validation-title")).toHaveText("The leaflet is ready to print", { timeout: 20_000 });
+  await expect(page.locator("#validation-title")).toHaveText("The flyer is ready to print", { timeout: 20_000 });
   await expect(page.locator("#print-button")).toContainText("Download A4 PDF");
 
   const [download] = await Promise.all([
@@ -89,7 +89,7 @@ test("Firefox Android downloads a compact A4 PDF", async ({ page }, testInfo) =>
 test("a genuinely clipped fact still blocks printing", async ({ page }) => {
   await page.goto("/");
   await fillListing(page);
-  await expect(page.locator("#validation-title")).toHaveText("The leaflet is ready to print", { timeout: 20_000 });
+  await expect(page.locator("#validation-title")).toHaveText("The flyer is ready to print", { timeout: 20_000 });
   await page.fill("#purpose", "W".repeat(22));
   await expect(page.locator("#validation-list")).toContainText("the content does not fit on the page");
   await expect(page.locator("#print-button")).toHaveAttribute("aria-disabled", "true");
@@ -307,7 +307,7 @@ for (const theme of ["light", "dark"]) {
     await page.locator("#title").focus();
     await scan("form with errors");
     await fillListing(page);
-    await expect(page.locator("#validation-title")).toHaveText("The leaflet is ready to print", { timeout: 20_000 });
+    await expect(page.locator("#validation-title")).toHaveText("The flyer is ready to print", { timeout: 20_000 });
     await scan("complete listing");
     await page.goto("/privacy#en");
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Data and privacy");
@@ -409,7 +409,7 @@ test("a fresh install opens the app and privacy notice offline, by either URL", 
   }
 });
 
-test("offline, the leaflet prints without a map and gets it back online", async ({ page, context, browserName }, testInfo) => {
+test("offline, the flyer prints without a map and gets it back online", async ({ page, context, browserName }, testInfo) => {
   await page.goto("/");
   await context.setOffline(true);
   try {
@@ -417,7 +417,7 @@ test("offline, the leaflet prints without a map and gets it back online", async 
     await expect(page.locator("#map-offline-notice")).toBeVisible();
     await expect(page.locator("#map-offline-notice")).toContainText("Connect to the internet to add one");
     await expect(page.locator(".leaflet-map-wrap")).toBeHidden();
-    await expect(page.locator("#validation-title")).toHaveText("The leaflet is ready to print", { timeout: 20_000 });
+    await expect(page.locator("#validation-title")).toHaveText("The flyer is ready to print", { timeout: 20_000 });
     await expect(page.locator("#print-button")).toHaveAttribute("aria-disabled", "false");
 
     // The photo takes the whole media column, on screen and in print.
@@ -443,14 +443,14 @@ test("offline, the leaflet prints without a map and gets it back online", async 
   await expect(page.locator(".leaflet-map-wrap")).toBeVisible();
   await expect(page.locator("#validation-list")).toContainText("mark the location on the map");
   await page.locator("#map-picker").click();
-  await expect(page.locator("#validation-title")).toHaveText("The leaflet is ready to print", { timeout: 20_000 });
+  await expect(page.locator("#validation-title")).toHaveText("The flyer is ready to print", { timeout: 20_000 });
 });
 
-test("the leaflet prints on exactly one A4 landscape page", async ({ page, browserName }, testInfo) => {
+test("the flyer prints on exactly one A4 landscape page", async ({ page, browserName }, testInfo) => {
   test.skip(browserName !== "chromium", "PDF output needs Chromium");
   await page.goto("/");
   await fillListing(page);
-  await expect(page.locator("#validation-title")).toHaveText("The leaflet is ready to print", { timeout: 20_000 });
+  await expect(page.locator("#validation-title")).toHaveText("The flyer is ready to print", { timeout: 20_000 });
   await page.emulateMedia({ media: "print" });
   const sheet = await page.locator("#leaflet-sheet").boundingBox();
   expect(sheet.x).toBeCloseTo(0, 0);
@@ -465,7 +465,7 @@ test("the leaflet prints on exactly one A4 landscape page", async ({ page, brows
   expect(Number(size[2])).toBeCloseTo(595.92, 1);
 });
 
-test("large photos are sized for the leaflet before PDF export", async ({ page, browserName }, testInfo) => {
+test("large photos are sized for the flyer before PDF export", async ({ page, browserName }, testInfo) => {
   test.skip(browserName !== "chromium", "PDF output needs Chromium");
   await page.goto("/");
   await fillListing(page);
@@ -497,7 +497,7 @@ test("large photos are sized for the leaflet before PDF export", async ({ page, 
     input.dispatchEvent(new Event("change", { bubbles: true }));
   });
   await expect.poll(() => page.locator("#preview-photo").evaluate((image) => image.naturalWidth)).toBe(1800);
-  await expect(page.locator("#validation-title")).toHaveText("The leaflet is ready to print", { timeout: 20_000 });
+  await expect(page.locator("#validation-title")).toHaveText("The flyer is ready to print", { timeout: 20_000 });
   const photo = await page.locator("#preview-photo").evaluate((image) => ({
     width: image.naturalWidth,
     height: image.naturalHeight,

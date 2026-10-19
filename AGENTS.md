@@ -38,13 +38,13 @@ There is no build step. Third-party libraries and fonts are vendored in
 
 Only `public/` is served:
 
-- `index.html`: the interface and the printable leaflet template.
+- `index.html`: the interface and the printable flyer template.
 - `logic.js`: the rules that need no page (area units, phone and link
   validation). It never touches `document` or `window`, so `npm test` covers
   it in Node. Put new rules of that kind here, with a test.
 - `app.js`: form handling, map, photo, QR code, translations, and
   `APP_VERSION`. It loads after `logic.js` and calls its functions as globals.
-- `styles.css`: app styling, leaflet layout, and print rules.
+- `styles.css`: app styling, flyer layout, and print rules.
 - `theme-init.js`: applies the saved theme before first paint.
 - `privacy.html`, `privacy.js`: the privacy notice and licence credits, in English
   and Polish. Built from the shared tinkered.app template (`../.tinkered-legal/privacy-template.html`, outside this repository); keep the
@@ -91,7 +91,7 @@ Repo-only: `scripts/check.mjs`, `test/logic.test.mjs`, `test/e2e/`, `playwright.
   logo inline (never hotlinked).
 - The on-screen preview must stay print-accurate. Check layout changes against
   real print output (A4 landscape, no margins, background graphics on). The
-  e2e print test checks that the leaflet fills exactly one A4 landscape page.
+  e2e print test checks that the flyer fills exactly one A4 landscape page.
 
 ## Third-party requests and the CSP
 

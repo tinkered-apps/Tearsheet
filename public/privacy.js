@@ -10,7 +10,7 @@
   const TEXT = {
     en: {
       title: "Data and privacy · Tearsheet",
-      descriptor: "A4 property leaflets",
+      descriptor: "A4 property flyers",
       language: "Language",
       auto: "Theme: follows your system",
       light: "Theme: light",

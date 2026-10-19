@@ -3,21 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Tearsheet builds a print-ready A4 property leaflet with tear-off phone tabs. No account, nothing uploaded.">
+  <meta name="description" content="Tearsheet builds a print-ready A4 property flyer with tear-off phone tabs. No account, nothing uploaded.">
   <meta name="theme-color" content="#15213b">
   <meta name="color-scheme" content="light dark">
   <script src="theme-init.js"></script>
-  <title>Tearsheet · property leaflet generator</title>
+  <title>Tearsheet · property flyer generator</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Tearsheet">
-  <meta property="og:title" content="Tearsheet · property leaflet generator">
+  <meta property="og:title" content="Tearsheet · property flyer generator">
   <meta property="og:description" content="Fill in the listing, drop a pin on the map, print an A4 sheet with 20 tear-off phone tabs. Your listing and photo stay in your browser.">
   <meta property="og:url" content="https://tearsheet.tinkered.app/">
   <meta property="og:image" content="https://tearsheet.tinkered.app/icons/social-card.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="The Tearsheet name next to a property leaflet with a row of tear-off phone tabs along its bottom edge.">
+  <meta property="og:image:alt" content="The Tearsheet name next to a property flyer with a row of tear-off phone tabs along its bottom edge.">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
@@ -37,7 +37,7 @@
           <rect x="5.1" y="3.6" width="21.8" height="24.8" rx="3.2" stroke="currentColor" stroke-width="1.9"/>
         </svg>
         <span class="brand-name">Tearsheet</span>
-        <span class="brand-descriptor" data-i18n="brandDescriptor">A4 property leaflets</span>
+        <span class="brand-descriptor" data-i18n="brandDescriptor">A4 property flyers</span>
       </h1>
     </div>
     <div class="header-controls">
@@ -54,7 +54,7 @@
   </header>
 
   <main class="workspace">
-    <aside class="editor-panel" data-i18n-aria="editorLabel" aria-label="Leaflet editor">
+    <aside class="editor-panel" data-i18n-aria="editorLabel" aria-label="Flyer editor">
       <form id="leaflet-form" novalidate autocomplete="off">
         <section class="form-section">
           <div class="section-heading">
@@ -225,10 +225,10 @@
     </aside>
 
     <div class="preview-column">
-    <section class="preview-panel" data-i18n-aria="previewLabel" aria-label="Leaflet preview">
+    <section class="preview-panel" data-i18n-aria="previewLabel" aria-label="Flyer preview">
       <div id="preview-toolbar" class="preview-toolbar">
         <div>
-          <h2 data-i18n="previewHeading">Generated leaflet</h2>
+          <h2 data-i18n="previewHeading">Generated flyer</h2>
         </div>
         <button id="print-button" class="print-button" type="button" aria-disabled="true">
           <span class="button-icon" aria-hidden="true">
@@ -252,7 +252,7 @@
 
       <div id="preview-stage" class="preview-stage">
         <div id="sheet-scale" class="sheet-scale">
-          <article id="leaflet-sheet" class="leaflet-sheet" data-i18n-aria="sheetLabel" aria-label="Printable leaflet">
+          <article id="leaflet-sheet" class="leaflet-sheet" data-i18n-aria="sheetLabel" aria-label="Printable flyer">
             <section class="leaflet-ad">
               <div class="leaflet-media">
                 <div class="leaflet-photo">
@@ -267,7 +267,7 @@
                     </svg>
                     <span id="preview-map-label">Location</span>
                   </span>
-                  <div id="preview-map" class="leaflet-preview-map" data-i18n-aria="previewMapLabel" aria-label="Leaflet location map"></div>
+                  <div id="preview-map" class="leaflet-preview-map" data-i18n-aria="previewMapLabel" aria-label="Flyer location map"></div>
                   <span class="media-placeholder" data-i18n="mapPlaceholder">Location map</span>
                 </div>
               </div>
